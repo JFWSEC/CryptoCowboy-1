@@ -1,30 +1,34 @@
-# CryptoCowboy REMASTERED
+# CryptoCowboy - REMASTERED
+## Back due to popular demand!
 
-Installation instructions will be provided soon; you can see the old ones at README_Original.md
+Free tech support is available on my Discord channel:
+```
+https://discord.gg/y8kXxt6
+```
+##	Why the Remaster?
+The original CC source code is awful; It's really bad, but it *does* work.
 
-<h2>
-	Updates
-</h2>
+I would like to provide the old ComputerCowboy experience but for 2022.
 
-<div>
-	<div>
-		<b>
-		1/14/2022
-		</b>
-	</div>
+My computing wizardry powers have leveled up and I would like to integrate that experience into restoring CC to it's former glory.
 
-8:12pm
+I'm proud of the functionality CC provided but not proud of showing off the nuts and bolts under the hood. Source code readability will see a big improvement here.
 
-	Due to popular demand, I have decided to re-implement the original CryptoCowboy software.
+For those that would like to better understand the innerworkings of a XRPL trading bot, this remaster offers a good starting point.
 
-	This version will be a complete re-write and many implementation details will change but the core functionality will remain the same.
+##	What happened to the original source code?
+If you want the unadulterated original source code, check out the original commit on this repository; that is the starting point for this remaster. Use at your own risk.
 
-	Additionally, I will offer full tech support for this REMASTERED version.
+Note: Tech support will only be provided for features listed here on the new README.md
 
-	Since the goal is to re-implement the original, I will not be accepting feature requests. For new features, follow my 'AssetStream' project which will be posting updates soon.
+##	Installation
 
-	For access to the original source code, check out the initial commit from this repository.
+	If you're reading this, new installation instructions for CC will be provided soon.
 
-	If no updates are provided after this one, you are looking at the original source code. (Or at least some version of it)
+##	What about your new project, **AssetStream**?
+This remaster is just the appetizer for **AssetStream**.
 
-</div>
+Once this restoration project is complete, no new features will be added to CryptoCowboy and the project will be put on ice.
+
+Work on AssetStream is currently on hold until this remaster is completed.
+**AssetStream's** feature set is a superset of CryptoCowboy's and will be the recommended path forward once feature parity is complete.
