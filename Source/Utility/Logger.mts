@@ -1,16 +1,9 @@
 
 import fs from "fs";
 
-var DEV_MODE = false;
-var DEBUG_MODE = false;
-var VERBOSE_MODE = false;
-
-console.log(`Forcing dev log on`);
-DEV_MODE = true;	//	TODO: make sure these flags get set before anything else.
-
-const devColor = `\x1b[35m`;	//	Highlight
-const debugColor = `\x1b[96m`;	//	Grey
-const verboseColor = `\x1b[90m`; 	//	White
+// const devColor = `\x1b[35m`;	//	Highlight
+// const debugColor = `\x1b[96m`;	//	Grey
+// const verboseColor = `\x1b[90m`; 	//	White
 const infoColor = `\x1b[0m`;	//	Bright White
 const warningColor = `\x1b[1m\x1b[33m`;	//	Yellow
 const errorColor = `\x1b[1m\x1b[31m`;	//	Red
@@ -100,7 +93,9 @@ function handleLogQueue()
 }
 function dateFormat(date, fstr, utc)
 {
-	utc = utc ? 'getUTC' : 'get';
+	utc = utc
+		? 'getUTC'
+		: 'get';
 	return fstr.replace(/%[YmdHMS]/g, function (m)
 	{
 		switch (m)
@@ -118,9 +113,6 @@ function dateFormat(date, fstr, utc)
 	});
 }
 
-/* dateFormat (new Date (), "%Y-%m-%d %H:%M:%S", true) returns
- "2012-05-18 05:37:21"  */
-
 function localTime()
 {
 	return dateFormat(new Date(), "%Y-%m-%d %H:%M:%S", false);
@@ -132,66 +124,6 @@ export default class Logger
 	{
 		this.id = id;
 	}
-
-	static enableVerboseMode()
-	{
-		VERBOSE_MODE = true;
-	}
-
-	static enableDebugMode()
-	{
-		DEBUG_MODE = true;
-	}
-
-	static enableDevMode()
-	{
-		DEV_MODE = true;
-	}
-
-	//	Logging message that should be deleted
-	dev(data)
-	{
-		if (!DEV_MODE)
-		{
-			return;
-		}
-		const message = parseType(data);
-
-		this.group();
-
-		console.log(`${localTime()}: ${title}${this.id}: ${devColor}${message}${reset}`);
-	}
-
-	//	Logging messages intended for debugging issues
-	debug(data)
-	{
-		if (!DEBUG_MODE)
-		{
-			return;
-		}
-		const message = parseType(data);
-
-		this.group();
-
-		console.log(`${localTime()}: ${title}${this.id}: ${debugColor}${message}${reset}`);
-	}
-
-	//	Logging messages intended for giving insight into the inner workings of functionality
-	verbose(data)
-	{
-		if (!VERBOSE_MODE)
-		{
-			return;
-		}
-
-		const message = parseType(data);
-		this.group();
-
-		console.log(`${localTime()}: ${title}${this.id}: ${verboseColor}${message}${reset}`);
-	}
-
-	//	Standard logging messages
-
 	info(data)
 	{
 		const message = parseType(data);
@@ -201,21 +133,7 @@ export default class Logger
 		console.log(`${localTime()}: ${title}${this.id}: ${infoColor}${message}${reset}`);
 		saveLog(`info`, localTime() + ": " + message);
 	}
-
-	//	Logging messages for non-critical issues
 	warning(data)
-	{
-		const message = parseType(data);
-
-		this.group();
-
-		console.log(`${localTime()}: ${title}${this.id}: ${warningColor}${message}${reset}`);
-		saveLog(`info`, `${localTime()}: Warning: ${message}`);
-		saveLog(`warning`, `${localTime()}: Warning: ${message}`);
-	}
-
-	//	Warning alias
-	warn(data)
 	{
 		const message = parseType(data);
 
@@ -243,8 +161,6 @@ export default class Logger
 			saveLog(`error`, `${localTime()}: Error: ${data}`);
 		}
 	}
-
-	//	Logging messages for good things.
 	success(data)
 	{
 		const message = parseType(data);
@@ -264,20 +180,4 @@ export default class Logger
 			lastModule = this.id;
 		}
 	}
-
-	//	Test all logging functions
-	testLoggers()
-	{
-		console.log(`Testing Logging modes. Ensure the following 7 messages are legible:`);
-
-		this.dev(`1: Testing Dev`);
-		this.debug(`2: Testing Debug`);
-		this.verbose(`3: Testing Verbose`);
-		this.info(`4: Testing Info`);
-		this.warning(`5: Testing Warning`);
-		this.error(`6: Testing Error`);
-		this.success(`7: Testing Success`);
-	}
 }
-
-//const log = new Logger(`Logger`);

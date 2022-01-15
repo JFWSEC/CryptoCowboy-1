@@ -1,10 +1,7 @@
 import Events from "events";
-
+import { log } from "console";
 //	Global API emitter
 const events = new Events();
-
-import Logger from "./Logger.mjs";
-const log = new Logger(`API`);
 
 import Assert from "assert";
 const assert = Assert.strict;
@@ -57,7 +54,6 @@ class Command
 	}
 }
 
-
 export default class API extends Events
 {
 	constructor(id)
@@ -72,30 +68,23 @@ export default class API extends Events
 
 		events.on(this.id, (data) =>
 		{
-			log.dev(`Global event emitter: local module ${this.id}, data ${data}`);
+			log(`Global event emitter: local module ${this.id}, data ${data}`);
 			const command = data.command;
-			//const source = data.source;
 
 			delete data.command;
 
 			this.emit(command, data);
 		});
 
-		let description;
-		if (id == `API`)
-		{
-			description = `Query API`;
-		}
-		else
-		{
-			description = `Query ${id} API`;
-		}
+		const description = id === `API`
+			? `Query API`
+			: `Query ${id} API`;
 
 		const queryCommand = this.createCommand(`?`);
 		queryCommand.describe(description);
 		queryCommand.setAction((data) =>
 		{
-			log.dev(`${this.id} module got data '${JSON.stringify(data)}' with command '?'`);
+			log(`${this.id} module got data '${JSON.stringify(data)}' with command '?'`);
 			const commands = [];
 
 			this.commands.forEach((value, key) =>
@@ -142,12 +131,12 @@ export default class API extends Events
 		this.on(commandName, commandData.action);
 		this.commands.set(commandName, commandData);
 
-		log.dev(`Registering: '${commandData.command}'. Description: ${commandData.description}`);
+		log(`Registering: '${commandData.command}'. Description: ${commandData.description}`);
 	}
 
 	registerConsumer(consumer)
 	{
-		log.dev(`'${this.id}' is registering consumer '${consumer.id}'`);
+		log(`'${this.id}' is registering consumer '${consumer.id}'`);
 		this.consumers.push(consumer);
 	}
 
@@ -187,7 +176,7 @@ export default class API extends Events
 		log.dev(`id ${this.id}, API Response ${data}, consumers: ${this.consumers}`);
 		this.consumers.forEach((consumer) =>
 		{
-			log.dev(`Sending ${data} to consumer ${consumer}`);
+			log(`Sending ${data} to consumer ${consumer}`);
 			if (this.id == `API`)
 			{
 				return;
@@ -197,5 +186,4 @@ export default class API extends Events
 	}
 }
 
-const api = new API(`API`);
-export { api };
+export const api = new API(`API`);

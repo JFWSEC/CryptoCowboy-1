@@ -2,8 +2,9 @@ import Logger from "./Utility/Logger.mjs";
 const log = new Logger(`Wallet`);
 
 import API from "./Utility/API.mjs";
-const wallet_API = new API(`wallet`);
-export { wallet_API };
+
+export const wallet_API = new API(`wallet`);
+
 
 const _wallets = new Map();
 
@@ -11,7 +12,6 @@ const assetsCommand = wallet_API.createCommand(`wallets`);
 assetsCommand.describe(`Returns a list of all wallets`);
 assetsCommand.setAction(async (data) =>
 {
-	console.log(`Wallet set actionn: `, data);
 	const response = await Wallet.getWallets();
 	console.log(response);
 
@@ -23,35 +23,6 @@ assetsCommand.setAction(async (data) =>
 	return result;
 });
 assetsCommand.register();
-
-/*
-{
-			log.dev(`${this.id} module got data '${JSON.stringify(data)}' with command '?'`);
-			const commands = [];
-
-			this.commands.forEach((value, key) =>
-			{
-				commands.push({ command: key, description: value });
-			});
-
-			const result = {};
-			result[this.id] = commands;
-
-			if (this.id == `API`)
-			{
-				registeredModules.forEach((value, key) =>
-				{
-					if (key == `API`)
-					{
-						return;
-					}
-					value.emit(`?`, data);
-				});
-			}
-			this.response(result);
-		});
-		*/
-
 
 export default class Wallet
 {
@@ -67,11 +38,7 @@ export default class Wallet
 
 	static async getWallets(method)
 	{
-		this.getWallets = async () =>
-		{
-			return await method();
-		};
-		return;
+		this.getWallets = method();
 	}
 
 

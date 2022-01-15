@@ -2,33 +2,22 @@
 import Logger from "./Utility/Logger.mjs";
 const log = new Logger(`XRPL`);
 
-import RippleAPI_Module from "ripple-lib";
-const RippleAPI = RippleAPI_Module.RippleAPI;
+import { RippleAPI } from "ripple-lib";
+import { TransactionOptions } from "ripple-lib/dist/npm/ledger/transaction";
+import { Amount, FormattedOrderSpecification, Memo } from "ripple-lib/dist/npm/common/types/objects";
 
-const mainNet = `wss://s1.ripple.com`;	// Public rippled server hosted by Ripple, Inc.
-//const mainNetFullHistory = `wss://s2.ripple.com`;
+const mainnet = `wss://s1.ripple.com`;
 
 const options =
 {
-	/*
-		authorization	string	Optional Username and password for HTTP basic authentication to the rippled server in the format username:password.
-		certificate	string	Optional A string containing the certificate key of the client in PEM format. (Can be an array of certificates).
-		key	string	Optional A string containing the private key of the client in PEM format. (Can be an array of keys).
-		passphrase	string	Optional The passphrase for the private key of the client.
-		proxy	uri string	Optional URI for HTTP/HTTPS proxy to use to connect to the rippled server.
-		proxyAuthorization	string	Optional Username and password for HTTP basic authentication to the proxy in the format username:password.
-		trustedCertificates	array\<string>	Optional Array of PEM-formatted SSL certificates to trust when connecting to a proxy. This is useful if you want to use a self-signed certificate on the proxy server. Note: Each element must contain a single certificate; concatenated certificates are not valid.
-	*/
-	server: mainNet,	//	uri string	Optional URI for rippled websocket port to connect to. Must start with wss://, ws://, wss+unix://, or ws+unix://.
+	server: mainnet,		//	uri string	Optional URI for rippled websocket port to connect to. Must start with wss://, ws://, wss+unix://, or ws+unix://.
 	feeCushion: 1.2,		//	number	Optional Factor to multiply estimated fee by to provide a cushion in case the required fee rises during submission of a transaction. Defaults to 1.2.
 	maxFeeXRP: `0.001`,	//	string	Optional Maximum fee to use with transactions, in XRP. Must be a string-encoded number. Defaults to '2'.
-	timeout: 30000,	//	integer	Optional Timeout in milliseconds before considering a request to have failed.
-	//trace: true	//	boolean	Optional If true, log rippled requests and responses to stdout.
+	timeout: 30000,			//	integer	Optional Timeout in milliseconds before considering a request to have failed.
 };
 const INTERVAL = 7500;
 
 const API = new RippleAPI(options);
-//const Ripple_Balance = API.le
 
 API.on(`connected`, () =>
 {
@@ -55,10 +44,7 @@ async function connect()
 	}
 	else
 	{
-		return await API.connect().then(() =>
-		{
-			//console.log(`Ripple API connected`);
-		}).catch((error) =>
+		return await API.connect().catch((error) =>
 		{
 			console.error(error);
 			throw new Error(error);
@@ -67,7 +53,7 @@ async function connect()
 }
 
 
-/* Function to prepare, sign, and submit a transaction to the XRP Ledger. */
+// Function to prepare, sign, and submit a transaction to the XRP Ledger.
 function submitTransaction(lastClosedLedgerVersion, prepared, secret)
 {
 	const signedData = API.sign(prepared.txJSON, secret);
@@ -76,11 +62,11 @@ function submitTransaction(lastClosedLedgerVersion, prepared, secret)
 	{
 		console.log(`Tentative Result: `, data.resultCode);
 		console.log(`Tentative Message: `, data.resultMessage);
-		/* The tentative result should be ignored. Transactions that succeed here can ultimately fail,
-			 and transactions that fail here can ultimately succeed. */
+		// The tentative result should be ignored. Transactions that succeed here can ultimately fail, and transactions that fail here can ultimately succeed.
 
 		// Begin validation workflow
-		const options = {
+		const options =
+		{
 			minLedgerVersion: lastClosedLedgerVersion,
 			maxLedgerVersion: prepared.instructions.maxLedgerVersion
 		};
@@ -91,7 +77,7 @@ function submitTransaction(lastClosedLedgerVersion, prepared, secret)
 	});
 }
 
-/* Verify a transaction is in a validated XRP Ledger version */
+// Verify a transaction is in a validated XRP Ledger version
 function verifyTransaction(hash, options)
 {
 	console.log(`Verifying Transaction`);
@@ -106,8 +92,7 @@ function verifyTransaction(hash, options)
 		return hash;
 	}).catch(error =>
 	{
-		/* If transaction not in latest validated ledger,
-			 try again until max ledger hit */
+		// If transaction not in latest validated ledger, try again until max ledger hit
 		if (error instanceof API.errors.PendingLedgerVersionError)
 		{
 			return new Promise((resolve, reject) =>
@@ -143,11 +128,6 @@ async function disconnect()
 
 export default class XRPL
 {
-	constructor()
-	{
-
-	}
-
 	static calculateNumber(f, ...args)
 	{
 		const numbers = args.map((arg) =>
@@ -202,27 +182,23 @@ export default class XRPL
 		return data;
 	}
 
-	/**
-	 * @param {string} address
-	 * @returns	{Promise<import("ripple-lib/dist/npm/ledger/balances").GetBalances>}
-	 */
-	async balance(address)
+	async balance(address: string)
 	{
 		await connect();
 
-		return await API.getBalances(address);
+		return API.getBalances(address);
 	}
 
 	async getOrders(address)
 	{
 		await connect();
 
-		return await API.getOrders(address);
+		return API.getOrders(address);
 	}
 
 	async getTransactions(address, options)
 	{
-		return await API.getTransactions(address, options);
+		return API.getTransactions(address, options);
 	}
 
 	async cancelOrder(address, secret, orderSequenceNumber)
@@ -238,19 +214,12 @@ export default class XRPL
 
 		const ledgerVersion = await API.getLedgerVersion();
 
-		return await submitTransaction(ledgerVersion, prepared, secret).catch((error) =>
-		{
-			log.error(error);
-		});
-
+		return submitTransaction(ledgerVersion, prepared, secret).catch(log.error);
 	}
 
 	async getTransaction(hash)
 	{
-		/**
-		 * @type {import("ripple-lib/dist/npm/ledger/transaction").TransactionOptions}
-		 */
-		const options =
+		const options: TransactionOptions =
 		{
 			includeRawTransaction: true
 		};
@@ -258,46 +227,27 @@ export default class XRPL
 		return await API.getTransaction(hash);
 	}
 
-
-	/**
-	 * @param {string} address
-	 * @param {import("ripple-lib/dist/npm/common/types/objects").Amount} buyAsset
-	 * @param {import("ripple-lib/dist/npm/common/types/objects").Amount} costAsset
-	 * @param {import("ripple-lib/dist/npm/common/types/objects").Memo[]} [memos]
-	 */
-	async buy(address, secret, buyAsset, costAsset, memos)
+	async buy(address: string, secret: string, quantity: Amount, totalPrice: Amount, memos: Memo[])
 	{
-
-		/**
-		 * @type {import("ripple-lib/dist/npm/common/types/objects").FormattedOrderSpecification}
-		 */
-		const order =
+		const order: FormattedOrderSpecification =
 		{
 			direction: `buy`,
-			quantity: buyAsset,
-			totalPrice: costAsset,
-			memos: memos
+			quantity,
+			totalPrice,
+			memos
 		};
+
 		console.log(`prepareOrder ${address}, ${JSON.stringify(order)}`);
 
 		const prepared = await API.prepareOrder(address, order);
 		const ledgerVersion = await API.getLedgerVersion();
 
-		return await submitTransaction(ledgerVersion, prepared, secret);
+		return submitTransaction(ledgerVersion, prepared, secret);
 	}
 
-	/**
-	 * @param {string} address
-	 * @param {import("ripple-lib/dist/npm/common/types/objects").Amount} sellAsset
-	 * @param {import("ripple-lib/dist/npm/common/types/objects").Amount} costAsset
-	 * @param {import("ripple-lib/dist/npm/common/types/objects").Memo[]} [memos]
-	 */
-	async sell(address, secret, sellAsset, costAsset, memos)
+	async sell(address: string, secret: string, sellAsset: Amount, costAsset: Amount, memos: Memo[])
 	{
-		/**
-		 * @type {import("ripple-lib/dist/npm/common/types/objects").FormattedOrderSpecification}
-		 */
-		const order =
+		const order: FormattedOrderSpecification =
 		{
 			direction: `sell`,
 			quantity: sellAsset,
@@ -311,15 +261,11 @@ export default class XRPL
 
 		const ledgerVersion = await API.getLedgerVersion();
 
-		return await submitTransaction(ledgerVersion, prepared, secret);
+		return submitTransaction(ledgerVersion, prepared, secret);
 	}
 
-
-
-	async getAccount(address)
+	getAccount(address)
 	{
-		const account = await API.getAccountInfo(address);
-		return account;
+		return API.getAccountInfo(address);
 	}
-
 }

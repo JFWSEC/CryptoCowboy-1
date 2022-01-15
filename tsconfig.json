@@ -7,8 +7,6 @@
 		"sourceRoot": "./Source"
 	},
 	"include": [
-		"./Source/**/*.ts",
-		"./Source/**/*.mts",
-		"Source/CryptoCowboy.mts"
+		"./Source/**/*.mts"
 	]
 }

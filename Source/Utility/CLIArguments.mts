@@ -1,5 +1,4 @@
-import Logger from "./Logger.mjs";
-const log = new Logger(`CLIArguments`);
+import { log } from "console";
 
 const targets = new Map();
 const flags = new Map();
@@ -9,8 +8,8 @@ export default class CLIArgument
 	constructor()
 	{
 		this.args = process.argv.slice(2);
-		log.debug(`Command line arguments:`);
-		log.debug(this.args);
+		log(`Command line arguments:`);
+		log(this.args);
 	}
 
 	execute()
@@ -26,7 +25,7 @@ export default class CLIArgument
 
 			if (flag)
 			{
-				log.debug(`Found flag ${flag}`);
+				log(`Found flag ${flag}`);
 				const flagCallback = flags.get(flag);
 				flagCallback();
 			}
@@ -40,7 +39,7 @@ export default class CLIArgument
 			{
 				if (optionArguments.length > 0)
 				{
-					log.debug(`Found option: ${optionArguments}`);
+					log(`Found option: ${optionArguments}`);
 					const targetObject = targets.get(optionArguments.shift());
 
 					if (!targetObject)
@@ -99,7 +98,7 @@ export default class CLIArgument
 		let targetObject = {};
 		if (targets.has(`--${target}`))
 		{
-			log.debug(`Adding target: --${target} with command '${command}'`);
+			log(`Adding target: --${target} with command '${command}'`);
 			targetObject = targets.get(`--${target}`);
 		}
 
@@ -116,12 +115,12 @@ export default class CLIArgument
 	{
 		if (!flags.has(flag))
 		{
-			log.debug(`Adding flag: ${flag}`);
+			log(`Adding flag: ${flag}`);
 			flags.set(flag, callback);
 		}
 		else
 		{
-			log.warn(`Duplicate Flag`);
+			log(`Duplicate Flag`);
 		}
 	}
 }
