@@ -1,36 +1,12 @@
 {
-  "name": "computercowboy",
-  "version": "v2.0.0-alpha.13",
-  "description": "Digital Asset Management Suite",
-  "main": "./CryptoCowboy.js",
-  "type": "module",
-  "scripts": {
-    "start": "node --experimental-json-modules ./CryptoCowboy.js --algorithm config 7000 USD XRP -V -D -DD -S",
-    "test": "node --experimental-json-modules ./CryptoCowboy.js -V -D -DD -S",
-    "development": "node --experimental-json-modules --inspect ./CryptoCowboy.js --algorithm config 500 USD XRP -V -D -DD -S",
-    "Checkout Release": "git checkout release",
-    "Merge": "git merge --no-commit --no-ff development",
-    "PrepareRelease": "git merge --squash development",
-    "Release": "git push -f github release:master",
-    "clearOrders": "node --experimental-json-modules ./CryptoCowboy.js --wallet clearOrders",
-    "New Empty Branch": "git checkout --orphan <branchname>",
-    "Delete Branch": "git branch -d <branch_name>",
-    "Git Ignore History": "git merge --squash <otherBranch>",
-    "Git Log": "git reflog",
-    "Git Undo": "git reflog; git reset --hard commit_sha",
-    "Git Stop tracking file": "git rm --cached <file>",
-    "Git stop tracking folder": "git rm -r --cached <folder>",
-    "Git clear cached": "git rm -r --cached ."
-  },
-  "author": "Michael Brown",
-  "license": "AGPL-v3",
-  "dependencies": {
-    "esm": "^3.2.25",
-    "ripple-lib": "^1.8.1",
-    "sqlite3": "^5.0.0"
-  },
-  "devDependencies": {
-    "eslint": "^6.6.0",
-    "nodemon": "^2.0.5"
-  }
+	"name": "cryptocowboy",
+	"version": "v3.0.0",
+	"description": "CryptoCowboy - REMASTERED",
+	"type": "module",
+	"author": "Michael Brown",
+	"license": "AGPL-v3",
+	"dependencies": {
+		"ripple-lib": "^1.8.1",
+		"sqlite3": "^5.0.0"
+	}
 }
