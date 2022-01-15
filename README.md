@@ -19,7 +19,7 @@ For those that would like to better understand the innerworkings of a XRPL tradi
 ##	What happened to the original source code?
 If you want the unadulterated original source code, check out the original commit on this repository; that is the starting point for this remaster. Use at your own risk.
 
-Note: Tech support will only be provided for features listed on this document.
+Note: Tech support will only be provided for features that are documented in the latest version of this README.md file.
 
 ##	Installation
 
