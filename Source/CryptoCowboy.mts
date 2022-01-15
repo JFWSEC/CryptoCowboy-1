@@ -1,9 +1,9 @@
 import Wallet from './Wallet.mjs';
-import Logger from "./Utility/Logger.mts/index.js";
+import Logger from "./Utility/Logger.mjs";
 const log = new Logger(`CryptoCowboy`);
 
 import XRPL_Wallet, { wallet_API } from './XRPL.Wallet.mjs';
-import Algorithm, { algorithm_API } from "./Algorithm.mts/index.js";
+import Algorithm, { algorithm_API } from "./Algorithm.mjs";
 
 import WebPortal, { api as webPortal_API } from "./WebPortal.mjs";
 const webPortal = new WebPortal();
@@ -12,18 +12,14 @@ webPortal.createHTTPServer(5443);
 wallet_API.registerConsumer(webPortal_API);
 algorithm_API.registerConsumer(webPortal_API);
 
-import { api } from "./Utility/API.mts/index.js";
+import { api } from "./Utility/API.mjs";
 //const api = new API(`API`);
 api.registerConsumer(webPortal_API);
 
 import Database from './Database.mjs';
 const database = new Database();
 
-import Versioning from '../Versioning.mjs';
-const versioning = new Versioning();
-const version = versioning.version;
-
-import CLIArgument from "./Utility/CLIArguments.mts/index.js";
+import CLIArgument from "./Utility/CLIArguments.mjs";
 const cliArgument = new CLIArgument();
 
 //XRPL_Wallet_API.registerConsumer(WebPortal_API);
@@ -97,12 +93,6 @@ cliArgument.registerOption(`test`, `out`, (...args) =>
 	log.dev(`Test CLIArg: ${args}`);
 });
 
-cliArgument.registerFlag(`BV`, async () =>
-{
-	log.info(`Bumping Version [DEV TOOL ONLY]`);
-	await versioning.increment();
-});
-
 cliArgument.registerFlag(`V`, () =>
 {
 	log.info(`Setting verbose Flag`);
@@ -136,7 +126,7 @@ function sleep(ms)
 
 async function main()
 {
-	log.info(`Welcome to CryptoCowboy ${version}`);
+	log.info(`Welcome to CryptoCowboy - REMASTERED`);	//	TODO: Include version number
 
 	await sleep(250);
 	await sleep(2500);	//	For debugging
