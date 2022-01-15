@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>
+    CryptoCowboy
+  </title>
+</head>
+
+<body>
+  <div>
+    <button id="enableCalculator" onclick="showCalculator()">Show Calculator</button>
+  </div>
+  <div id="IPWidget" hidden=true>
+    <div>
+      <button id="hideCalculator" onclick="hideCalculator()">Hide Calculator</button>
+    </div>
+    <table border="1" align="center" cellpadding="10">
+      <tbody>
+        <tr>
+          <td style="border-style: solid; border-width: 1px;">
+            <div></div>
+          </td>
+          <td>
+            <div><b>Prime-Asset</b></div>
+            <div>
+              <i>Asset you want to maximize</i>
+            </div>
+          </td>
+          <td>
+            <div><b>Co-Asset</b></div>
+            <div>
+              <i>Asset you will trade against</i>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div>
+              <b>Name</b>
+            </div>
+          </td>
+          <td>
+            <div><input type="text" value="USD" name="primeName" id="primeName" onchange="reCalculate(document.getElementById('primeName'))" onkeydown="keyCalculate(document.getElementById('primeName'))"></div>
+          </td>
+          <td>
+            <div><input type="text" value="XRP" name="coName" id="coName" onchange="reCalculate(document.getElementById('coName'))" onkeydown="keyCalculate(document.getElementById('coName'))"></div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div><b>Price</b></div>
+          </td>
+          <td>
+            <div><input type="number" step="0.01" value=1.00 name="primePrice" readonly></div>
+            <div><i>This will always be 1 because it's your reference value</i></div>
+          </td>
+          <td>
+            <div><input type="number" step="0.01" value=0.26 name="coPrice" id="coPrice" onchange="reCalculate(document.getElementById('coPrice'))" onkeydown="keyCalculate(document.getElementById('coPrice'))"></div>
+            <i>What is the price of your coAsset with respect to the primeAsset</i>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div><b>Quantity</b></div>
+          </td>
+          <td>
+            <div><input type="number" step="0.01" value=1000.00 name="primeQuantity" id="primeQuantity" onchange="reCalculate(document.getElementById('primeQuantity'))" onkeydown="keyCalculate(document.getElementById('primeQuantity'))">
+            </div>
+            <i>How much of this asset do you have available on your account</i>
+          </td>
+          <td>
+            <div><input type="number" step="0.01" value=2884.62 name="coQuantity" id="coQuantity" onchange="reCalculate(document.getElementById('coQuantity'))" onkeydown="keyCalculate(document.getElementById('coQuantity'))"></div>
+            <i>How much of this asset do you have available on your account</i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div>
+      <table border="1" align="center" cellpadding="10">
+        <tbody>
+          <tr>
+            <td style="border-style: solid; border-width: 1px;">
+              <div><b>Inflection Point</b></div>
+              <i>Measured in dollars</i>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div><input type="number" step="0.01" name="IP" value=750.00 id="IP" onchange="reCalculate(document.getElementById('IP'))" onkeydown="keyCalculate(document.getElementById('IP'))"></div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div id="summary">You will have 1000 USD and 2884.6154 in your wallet to maintain an inflectionPoint of 750</div><br>
+              <div id="risk">Risk vs Reward: 42</div>
+              <i>Scale from 0 to 100</i><br>
+              <i>0 is least risky | 100 is most risky</i><br>
+              <i>This number should be below 80</i><br>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+  <br>
+  <hr>
+
+  <div id="CryptoCowboy"></div>
+
+
+
+  <footer class="footer" style="position: fixed; bottom: 0; width: 100%;">
+    Donate: rBCA75NX9SGo3sawJQaQNX1ujEY9xZsYBj
+  </footer>
+
+  <script>
+    function hideCalculator()
+    {
+      document.getElementById("IPWidget").hidden = true;
+      document.getElementById("enableCalculator").hidden = false;
+    }
+
+    function showCalculator()
+    {
+      document.getElementById("IPWidget").hidden = false;
+      document.getElementById("enableCalculator").hidden = true;
+    }
+
+    function reCalculate(value)
+    {
+      const primeName = document.getElementById(`primeName`);
+      const coName = document.getElementById(`coName`);
+      const coPrice = document.getElementById(`coPrice`);
+      const primeQuantity = document.getElementById(`primeQuantity`);
+      const coQuantity = document.getElementById(`coQuantity`);
+      const IP = document.getElementById(`IP`);
+      const summary = document.getElementById(`summary`);
+      const risk = document.getElementById(`risk`);
+
+      console.log(value);
+
+      //<div id="summary">You will have 1000 USD and 2884.6154 in your wallet to maintain an inflectionPoint of 750</div>
+      // <div id="risk" >Risk vs Reward: 42</div>
+
+      if (value.id == `coPrice`)
+      {
+        coQuantity.value = (parseFloat(IP.value) / parseFloat(coPrice.value)).toFixed(2);
+      }
+      else if (value.id == `primeQuantity`)
+      {
+        //coQuantity.value = parseFloat(IP.value) / parseFloat(coPrice.value);
+      }
+      else if (value.id == `coQuantity`)
+      {
+        IP.value = (parseFloat(coQuantity.value) * parseFloat(coPrice.value)).toFixed(2);
+      }
+
+      summary.innerHTML = `You will have <b>${parseFloat(primeQuantity.value).toFixed(2)} ${primeName.value}</b> and <b>${parseFloat(coQuantity.value).toFixed(2)} ${coName.value}</b> in your wallet to maintain an inflectionPoint of <b>${parseFloat(IP.value).toFixed(2)}</b>`;
+      risk.innerHTML = `Risk vs Reward: <b>${(parseFloat(IP.value) / (parseFloat(primeQuantity.value) + parseFloat(IP.value)) * 100).toFixed(2)}</b>`;
+    }
+
+    function keyCalculate(value)
+    {
+      reCalculate(value);
+    }
+
+
+  </script>
+
+  <script type="module" async defer>
+
+    import CryptoCowboy from './javascript/CC.js';
+
+    window.addEventListener("load", (event) =>
+    {
+      //const CC = new CryptoCowboy();
+    });
+  </script>
+</body>
+
+</html>
