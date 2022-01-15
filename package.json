@@ -7,6 +7,7 @@
 	"license": "AGPL-v3",
 	"dependencies": {
 		"ripple-lib": "^1.8.1",
-		"sqlite3": "^5.0.0"
+		"sqlite3": "^4.2.0",
+		"ws": "^8.4.2"
 	}
 }
