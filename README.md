@@ -1,5 +1,7 @@
 # CryptoCowboy REMASTERED
 
+Installation instructions will be provided soon; you can see the old ones at README_Original.md
+
 <h2>
 	Updates
 </h2>
