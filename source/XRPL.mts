@@ -1,6 +1,6 @@
 
 //import { RippleAPI } from "../node_modules/ripple-lib/dist/npm/index.js";
-import Logger from "./Utility/Logger.js";
+import Logger from "./Utility/Logger.mts/index.js";
 const log = new Logger(`XRPL`);
 
 import RippleAPI_Module from "ripple-lib";
@@ -78,7 +78,7 @@ function submitTransaction(lastClosedLedgerVersion, prepared, secret)
 		console.log(`Tentative Result: `, data.resultCode);
 		console.log(`Tentative Message: `, data.resultMessage);
 		/* The tentative result should be ignored. Transactions that succeed here can ultimately fail,
-		   and transactions that fail here can ultimately succeed. */
+			 and transactions that fail here can ultimately succeed. */
 
 		// Begin validation workflow
 		const options = {
@@ -108,7 +108,7 @@ function verifyTransaction(hash, options)
 	}).catch(error =>
 	{
 		/* If transaction not in latest validated ledger,
-		   try again until max ledger hit */
+			 try again until max ledger hit */
 		if (error instanceof API.errors.PendingLedgerVersionError)
 		{
 			return new Promise((resolve, reject) =>

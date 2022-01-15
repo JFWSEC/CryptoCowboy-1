@@ -1,6 +1,6 @@
 "use strict";
 
-import Logger from "./Logger.js";
+import Logger from "./Logger.mjs";
 const logger = new Logger(`Events`);
 
 var events = (function ()
@@ -66,7 +66,7 @@ var events = (function ()
 
 /**
  * This module allows publishing and subscribing to events.
- * 
+ *
  * @example
  * //	Module A:
  * var events = new Events("Module_A");
@@ -75,20 +75,20 @@ var events = (function ()
  * {
  * 		console.log(data);
  * });
- * 
+ *
  * var finishedListening = false;
  * //	When you no longer need the to listen to an event
  * if(finishedListening)
  * {
  * 		eventHandle.remove();
  * }
- * 
+ *
  * //	Module B:
  * var events = new Events("Module_B");
  * var eventTopic = "myTopic";
  * var eventData = "Hello World";
  * events.publish(eventTopic, eventData);
- * 
+ *
  * //	Expected results:
  * > Module_A subscribed to 'EventTopic'
  * > Module_B published 'EventTopic': 'Hello World'

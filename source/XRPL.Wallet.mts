@@ -1,10 +1,10 @@
-import XRPL from "./XRPL.js";
+import XRPL from "./XRPL.mts/index.js";
 const xrpl = new XRPL();
 
-import Logger from "./Utility/Logger.js";
+import Logger from "./Utility/Logger.mts/index.js";
 const log = new Logger(`XRPL_Wallet`);
 
-import Wallet, { wallet_API } from "./Wallet.js";
+import Wallet, { wallet_API } from "./Wallet.mts/index.js";
 export { wallet_API };
 
 
@@ -33,7 +33,7 @@ export default class XRPL_Wallet extends Wallet
 			//	Optional 	-	boolean	-	If true, the transactions will be sent from the server in a condensed binary format rather than JSON.
 			binary: false,	//	Maybe use this one day to be nice to the servers
 			//	Optional	-	address	-	If provided, only return transactions with this account as a counterparty to the transaction.
-			//counterparty: 
+			//counterparty:
 			// earliestFirst	boolean
 			//excludeFailures	boolean
 			//includeRawTransactions	object
@@ -54,7 +54,7 @@ export default class XRPL_Wallet extends Wallet
 	{
 		log.dev(`hash: ${hash}`);
 
-		const transaction = await xrpl.getTransaction(hash).catch((error) => 
+		const transaction = await xrpl.getTransaction(hash).catch((error) =>
 		{
 			log.error(error);
 		});
@@ -85,7 +85,7 @@ export default class XRPL_Wallet extends Wallet
 
 		let result = asset;
 
-		assets.forEach((data) => 
+		assets.forEach((data) =>
 		{
 			console.log(data);
 			console.log(asset);
@@ -104,7 +104,7 @@ export default class XRPL_Wallet extends Wallet
 		const result = [];
 		const balances = await xrpl.balance(this.address);
 
-		balances.map((balance) => 
+		balances.map((balance) =>
 		{
 			result.push(balance);
 		});
@@ -117,7 +117,7 @@ export default class XRPL_Wallet extends Wallet
 	{
 		const orders = await xrpl.getOrders(this.address);
 		log.dev(`Orders:`);
-		orders.forEach((orders, index) => 
+		orders.forEach((orders, index) =>
 		{
 			const specification = orders.specification;
 			const direction = specification.direction;
@@ -139,7 +139,7 @@ export default class XRPL_Wallet extends Wallet
 
 		for (let i = 0; i < orders.length; i++)
 		{
-			await this.cancelOrder(orders[i].properties.sequence).catch((error) => 
+			await this.cancelOrder(orders[i].properties.sequence).catch((error) =>
 			{
 				log.error(`An error has occurred`);
 				log.error(error);

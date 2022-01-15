@@ -2,12 +2,12 @@
 
 import packageJSON from './package.json';
 
-import { getLastInteger, removeLastInteger } from "./source/Utility/CC_String.js";
+import { getLastInteger, removeLastInteger } from "./Source/Utility/CC_String.mts/index.js";
 
-import Logger from "./source/Utility/Logger.js";
+import Logger from "./Source/Utility/Logger.mts/index.js";
 const log = new Logger(`Versioning`);
 
-import { replaceInFileAsync } from "./source//Utility/Files.js";
+import { replaceInFileAsync } from "./Source/Utility/Files.mts/index.js";
 
 export default class Versioning
 {

@@ -11,7 +11,7 @@ class Assert
 
 	/**
 	 * Check if condition is true, if not, use the fallback instead if it exists
-	 * @param {bool} condition 
+	 * @param {bool} condition
 	 */
 	check(condition)
 	{
@@ -31,7 +31,7 @@ class Assert
 	{
 		this.notEmpty;
 
-		const condition = () => 
+		const condition = () =>
 		{
 			return (typeof (this.data) === `string`);
 		};
@@ -43,7 +43,7 @@ class Assert
 
 	get notEmpty()
 	{
-		const condition = () => 
+		const condition = () =>
 		{
 			return (this.data.length > 0);
 		};
@@ -55,7 +55,7 @@ class Assert
 
 	get number()
 	{
-		const condition = () => 
+		const condition = () =>
 		{
 			return (typeof (this.data) === `number`);
 		};
@@ -69,7 +69,7 @@ class Assert
 	{
 		this.number;
 
-		const condition = () => 
+		const condition = () =>
 		{
 			return (this.data >= 0);
 		};
@@ -83,9 +83,9 @@ class Assert
 	{
 		this.number;
 
-		values.forEach((value) => 
+		values.forEach((value) =>
 		{
-			const condition = () => 
+			const condition = () =>
 			{
 				return (this.data < value);
 			};
@@ -98,15 +98,15 @@ class Assert
 
 	/**
 	 * Checks to see if the value is an instance of a class
-	 * @param  {...any} values 
+	 * @param  {...any} values
 	 */
 	isA(...values)
 	{
-		values.forEach((value) => 
+		values.forEach((value) =>
 		{
-			const condition = () => 
+			const condition = () =>
 			{
-				return (this.data instanceof(value));
+				return (this.data instanceof (value));
 			};
 			this.check(condition());
 
@@ -119,7 +119,7 @@ class Assert
 	lessThanOrEqual(...values)
 	{
 		this.number;
-		values.forEach((value) => 
+		values.forEach((value) =>
 		{
 			assert.ok(this.data <= value, new Error(`${this.data} is not less than ${value}`));
 		});
@@ -129,7 +129,7 @@ class Assert
 	greaterThan(...values)
 	{
 		this.number;
-		values.forEach((value) => 
+		values.forEach((value) =>
 		{
 			assert.ok(this.data > value, new Error(`${this.data} is not greater than ${value}`));
 		});
@@ -139,7 +139,7 @@ class Assert
 	greaterThanOrEqual(...values)
 	{
 		this.number;
-		values.forEach((value) => 
+		values.forEach((value) =>
 		{
 			assert.ok(this.data >= value, new Error(`${this.data} is not greater than ${value}`));
 		});

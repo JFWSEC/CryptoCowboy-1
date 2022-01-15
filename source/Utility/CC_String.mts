@@ -1,6 +1,6 @@
 
 
-import Logger from "./Logger.js";
+import Logger from "./Logger.mjs";
 const log = new Logger(`String`);
 
 const _string = new Map();

@@ -1,7 +1,7 @@
-import Logger from "./Utility/Logger.js";
+import Logger from "./Utility/Logger.mts/index.js";
 const log = new Logger(`Wallet`);
 
-import API from "./Utility/API.js";
+import API from "./Utility/API.mts/index.js";
 const wallet_API = new API(`wallet`);
 export { wallet_API };
 
@@ -9,7 +9,7 @@ const _wallets = new Map();
 
 const assetsCommand = wallet_API.createCommand(`wallets`);
 assetsCommand.describe(`Returns a list of all wallets`);
-assetsCommand.setAction(async (data) => 
+assetsCommand.setAction(async (data) =>
 {
 	console.log(`Wallet set actionn: `, data);
 	const response = await Wallet.getWallets();
@@ -29,7 +29,7 @@ assetsCommand.register();
 			log.dev(`${this.id} module got data '${JSON.stringify(data)}' with command '?'`);
 			const commands = [];
 
-			this.commands.forEach((value, key) => 
+			this.commands.forEach((value, key) =>
 			{
 				commands.push({ command: key, description: value });
 			});
@@ -39,7 +39,7 @@ assetsCommand.register();
 
 			if (this.id == `API`)
 			{
-				registeredModules.forEach((value, key) => 
+				registeredModules.forEach((value, key) =>
 				{
 					if (key == `API`)
 					{
@@ -57,7 +57,7 @@ export default class Wallet
 {
 	constructor(id)
 	{
-		if (this.constructor === Wallet) 
+		if (this.constructor === Wallet)
 		{
 			throw new TypeError(`Abstract class "${Wallet.name}" cannot be instantiated directly.`);
 		}
@@ -67,7 +67,7 @@ export default class Wallet
 
 	static async getWallets(method)
 	{
-		this.getWallets = async () => 
+		this.getWallets = async () =>
 		{
 			return await method();
 		};
@@ -119,9 +119,9 @@ export default class Wallet
 	}
 
 	/**
-	 * 
-	 * @param {import("ripple-lib/dist/npm/common/types/objects").Amount} buyAsset 
-	 * @param {import("ripple-lib/dist/npm/common/types/objects").Amount} costAsset 
+	 *
+	 * @param {import("ripple-lib/dist/npm/common/types/objects").Amount} buyAsset
+	 * @param {import("ripple-lib/dist/npm/common/types/objects").Amount} costAsset
 	 * @param {import("ripple-lib/dist/npm/common/types/objects").Memo} [memos]
 	 */
 	async buy(buyAsset, costAsset, memos)
@@ -134,9 +134,9 @@ export default class Wallet
 
 
 	/**
-	 * 
-	 * @param {import("ripple-lib/dist/npm/common/types/objects").Amount} sellAsset 
-	 * @param {import("ripple-lib/dist/npm/common/types/objects").Amount} costAsset 
+	 *
+	 * @param {import("ripple-lib/dist/npm/common/types/objects").Amount} sellAsset
+	 * @param {import("ripple-lib/dist/npm/common/types/objects").Amount} costAsset
 	 * @param {import("ripple-lib/dist/npm/common/types/objects").Memo} [memos]
 	 */
 	async sell(sellAsset, costAsset, memos)

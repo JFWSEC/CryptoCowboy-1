@@ -1,34 +1,34 @@
-import Wallet from './source/Wallet.js';
-import Logger from "./source/Utility/Logger.js";
+import Wallet from './Wallet.mjs';
+import Logger from "./Utility/Logger.mts/index.js";
 const log = new Logger(`CryptoCowboy`);
 
-import XRPL_Wallet, { wallet_API } from './source/XRPL.Wallet.js';
-import Algorithm, { algorithm_API } from "./source/Algorithm.js";
+import XRPL_Wallet, { wallet_API } from './XRPL.Wallet.mjs';
+import Algorithm, { algorithm_API } from "./Algorithm.mts/index.js";
 
-import WebPortal, { api as webPortal_API } from "./source/WebPortal.js";
+import WebPortal, { api as webPortal_API } from "./WebPortal.mjs";
 const webPortal = new WebPortal();
 webPortal.createHTTPServer(5443);
 
 wallet_API.registerConsumer(webPortal_API);
 algorithm_API.registerConsumer(webPortal_API);
 
-import { api } from "./source/Utility/API.js";
+import { api } from "./Utility/API.mts/index.js";
 //const api = new API(`API`);
 api.registerConsumer(webPortal_API);
 
-import Database from './source/Database.js';
+import Database from './Database.mjs';
 const database = new Database();
 
-import Versioning from './Versioning.js';
+import Versioning from '../Versioning.mjs';
 const versioning = new Versioning();
 const version = versioning.version;
 
-import CLIArgument from "./source/Utility/CLIArguments.js";
+import CLIArgument from "./Utility/CLIArguments.mts/index.js";
 const cliArgument = new CLIArgument();
 
 //XRPL_Wallet_API.registerConsumer(WebPortal_API);
 
-cliArgument.registerOption(`wallet`, `add`, async (id, address, secret) => 
+cliArgument.registerOption(`wallet`, `add`, async (id, address, secret) =>
 {
 	const x = `x`;
 	const secretReplacement = x.repeat(secret.length);
@@ -51,14 +51,14 @@ cliArgument.registerOption(`wallet`, `add`, async (id, address, secret) =>
 	log.info(`Added wallet`);
 });
 
-cliArgument.registerOption(`wallet`, `remove`, () => 
+cliArgument.registerOption(`wallet`, `remove`, () =>
 {
 	log.dev(`Removing wallet table option selected`);
 	database.removeTable(`Wallet`);
 });
 
 var clearOrders = false;
-cliArgument.registerOption(`wallet`, `clearOrders`, () => 
+cliArgument.registerOption(`wallet`, `clearOrders`, () =>
 {
 	clearOrders = true;
 });
@@ -67,7 +67,7 @@ var inflectionPoint = 0;
 var primeAsset = ``;
 var coAsset = ``;
 
-cliArgument.registerOption(`algorithm`, `config`, async (iP, pA, cA) => 
+cliArgument.registerOption(`algorithm`, `config`, async (iP, pA, cA) =>
 {
 	/*
 	const tableAlgorithm = await database.readEntireTable(`algorithm`);
@@ -92,44 +92,44 @@ cliArgument.registerOption(`algorithm`, `config`, async (iP, pA, cA) =>
 	coAsset = cA;
 });
 
-cliArgument.registerOption(`test`, `out`, (...args) => 
+cliArgument.registerOption(`test`, `out`, (...args) =>
 {
 	log.dev(`Test CLIArg: ${args}`);
 });
 
-cliArgument.registerFlag(`BV`, async () => 
+cliArgument.registerFlag(`BV`, async () =>
 {
 	log.info(`Bumping Version [DEV TOOL ONLY]`);
 	await versioning.increment();
 });
 
-cliArgument.registerFlag(`V`, () => 
+cliArgument.registerFlag(`V`, () =>
 {
 	log.info(`Setting verbose Flag`);
 	Logger.enableVerboseMode();
 });
 
-cliArgument.registerFlag(`D`, () => 
+cliArgument.registerFlag(`D`, () =>
 {
 	log.info(`Setting Debug Flag`);
 	Logger.enableDebugMode();
 });
 
-cliArgument.registerFlag(`DD`, () => 
+cliArgument.registerFlag(`DD`, () =>
 {
 	log.info(`Setting Dev Flag`);
 	Logger.enableDevMode();
 });
 
 var startAlgo = false;
-cliArgument.registerFlag(`S`, () => 
+cliArgument.registerFlag(`S`, () =>
 {
 	startAlgo = true;
 });
 
 cliArgument.execute();
 
-function sleep(ms) 
+function sleep(ms)
 {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -144,7 +144,7 @@ async function main()
 	const listOfWallets = await database.read(`wallet`, [`id`, `address`, `secret`]);
 	log.dev(`${listOfWallets.length} wallets found`);
 
-	const getXRPLWallets = async () => 
+	const getXRPLWallets = async () =>
 	{
 		const result = await database.read(`wallet`, [`id`, `address`, `secret`]);
 		log.info(result);
@@ -157,16 +157,16 @@ async function main()
 	 * @type Wallet | XRPL_Wallet[]
 	 */
 	const wallets = [];
-	listOfWallets.map((wallet) => 
+	listOfWallets.map((wallet) =>
 	{
 		wallets.push(new XRPL_Wallet(wallet));
 	});
 
 	const myWallet = wallets[0];
 	const assets = await myWallet.getAssets();
-	assets.map((asset) => 
+	assets.map((asset) =>
 	{
-		const count = assets.reduce((currencyCount, countCurrency) => 
+		const count = assets.reduce((currencyCount, countCurrency) =>
 		{
 			if (isNaN(currencyCount))
 			{
@@ -210,33 +210,33 @@ async function main()
 	log.debug(`Table Algorithm: `);
 	log.debug(tableAlgorithm);
 
-	if(inflectionPoint == 0 && tableAlgorithm[0])
+	if (inflectionPoint == 0 && tableAlgorithm[0])
 	{
 		inflectionPoint = tableAlgorithm[0].inflectionPoint;
 	}
 
 	let rp = 0;
 
-	await database.read(`algorithm`, `rangePercentage`).then((data) => 
+	await database.read(`algorithm`, `rangePercentage`).then((data) =>
 	{
 		console.log(`read`);
 		rp = data[0].rangePercentage;
 		console.log(data);
 		return true;
-	}).catch(async (error) => 
+	}).catch(async (error) =>
 	{
 		console.log(`read fail`);
 		console.log(`Empty row`, error);
 	});
 
-	if(!rp)
+	if (!rp)
 	{
 		rp = 3;
-		await database.addColumn(`algorithm`, `rangePercentage`).then(async () => 
+		await database.addColumn(`algorithm`, `rangePercentage`).then(async () =>
 		{
 			console.log(`add col`);
 			return database.updateData(`algorithm`, `rangePercentage`, `3`);
-		}).catch(() => 
+		}).catch(() =>
 		{
 			console.log(`catch col`);
 			console.log(`error`);
@@ -246,12 +246,12 @@ async function main()
 
 
 
-	if(primeAsset == ``)
+	if (primeAsset == ``)
 	{
 		primeAsset = tableAlgorithm[0].primeasset;
 	}
 
-	if(coAsset == ``)
+	if (coAsset == ``)
 	{
 		coAsset = tableAlgorithm[0].coasset;
 	}
@@ -263,7 +263,7 @@ async function main()
 	let primeAssetsSet = false;
 	let coAssetsSet = false;
 
-	assets.forEach((value) => 
+	assets.forEach((value) =>
 	{
 		if (value.currency == primeAsset && !primeAssetsSet)
 		{
@@ -295,7 +295,7 @@ async function main()
 		await algorithm.start();
 	}
 }
-main().catch((error) => 
+main().catch((error) =>
 {
 	log.error(`An error has occured in main!`);
 	log.error(error);
@@ -303,12 +303,12 @@ main().catch((error) =>
 	process.exitCode = 1;
 });
 
-process.on(`beforeExit`, (code) => 
+process.on(`beforeExit`, (code) =>
 {
 	log.verbose(`Process beforeExit event with code: ${code}`);
 });
 
-process.on(`exit`, (code) => 
+process.on(`exit`, (code) =>
 {
 	log.verbose(`About to exit with code: ${code}`);
 });

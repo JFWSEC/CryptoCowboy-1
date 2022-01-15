@@ -1,18 +1,18 @@
 import crypto from "crypto";
 
 //import Wallet from "./Wallet.js";
-import XRPL from "./XRPL.js";
-import { divide } from "./Utility.js";
+import XRPL from "./XRPL.mjs";
+import { divide } from "./Utility.mjs";
 
-import Logger from "./Utility/Logger.js";
+import Logger from "./Utility/Logger.mts/index.js";
 const log = new Logger(`Algorithm`);
 
-import API from "./Utility/API.js";
+import API from "./Utility/API.mts/index.js";
 const algorithm_API = new API(`algorithm`);
 export { algorithm_API };
 
 //	Remove DB later
-import Database from './Database.js';
+import Database from './Database.mjs';
 const database = new Database();
 
 const _id = new Map();

@@ -3,7 +3,7 @@ import Events from "events";
 //	Global API emitter
 const events = new Events();
 
-import Logger from "./Logger.js";
+import Logger from "./Logger.mjs";
 const log = new Logger(`API`);
 
 import Assert from "assert";
@@ -70,7 +70,7 @@ export default class API extends Events
 		this.commands = new Map();
 		this.consumers = [];
 
-		events.on(this.id, (data) => 
+		events.on(this.id, (data) =>
 		{
 			log.dev(`Global event emitter: local module ${this.id}, data ${data}`);
 			const command = data.command;
@@ -93,12 +93,12 @@ export default class API extends Events
 
 		const queryCommand = this.createCommand(`?`);
 		queryCommand.describe(description);
-		queryCommand.setAction((data) => 
+		queryCommand.setAction((data) =>
 		{
 			log.dev(`${this.id} module got data '${JSON.stringify(data)}' with command '?'`);
 			const commands = [];
 
-			this.commands.forEach((value, key) => 
+			this.commands.forEach((value, key) =>
 			{
 				commands.push({ command: key, description: value });
 			});
@@ -108,7 +108,7 @@ export default class API extends Events
 
 			if (this.id == `API`)
 			{
-				registeredModules.forEach((value, key) => 
+				registeredModules.forEach((value, key) =>
 				{
 					if (key == `API`)
 					{
@@ -130,8 +130,8 @@ export default class API extends Events
 	}
 
 	/**
-	 * 
-	 * @param {Command} commandData 
+	 *
+	 * @param {Command} commandData
 	 */
 	registerCommand(commandData)
 	{
@@ -153,7 +153,7 @@ export default class API extends Events
 
 	registerConsumers(consumers)
 	{
-		consumers.forEach((consumer) => 
+		consumers.forEach((consumer) =>
 		{
 			this.registerConsumer(consumer);
 		});
@@ -185,7 +185,7 @@ export default class API extends Events
 	response(data)
 	{
 		log.dev(`id ${this.id}, API Response ${data}, consumers: ${this.consumers}`);
-		this.consumers.forEach((consumer) => 
+		this.consumers.forEach((consumer) =>
 		{
 			log.dev(`Sending ${data} to consumer ${consumer}`);
 			if (this.id == `API`)

@@ -1,0 +1,14 @@
+{
+	"extends": "../tsconfig.json",
+	"compilerOptions": {
+		"outDir": "./Release",
+		"rootDir": "./Source",
+		"baseUrl": "./Source",
+		"sourceRoot": "./Source"
+	},
+	"include": [
+		"./Source/**/*.ts",
+		"./Source/**/*.mts",
+		"Source/CryptoCowboy.mts"
+	]
+}

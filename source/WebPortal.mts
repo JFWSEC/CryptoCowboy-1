@@ -9,7 +9,7 @@ import fs from "fs";
 import WebSocket from "ws";
 import url from "url";
 
-import API from "./Utility/API.js";
+import API from "./Utility/API.mts/index.js";
 
 const api = new API(`WebPortal`);
 export { api };
@@ -168,7 +168,7 @@ webSocket.on(`connection`, function connection(socket, request)
 		socket.send(resetMessage);
 	}
 
-	socket.on(`message`, function (data) 
+	socket.on(`message`, function (data)
 	{
 		data = JSON.parse(data);
 		socket.send(`ACK: ${data.sequence.toString(10)}`);
@@ -178,17 +178,17 @@ webSocket.on(`connection`, function connection(socket, request)
 		API.request(data);
 	});
 
-	socket.on(`error`, (error) => 
+	socket.on(`error`, (error) =>
 	{
 		console.error(error);
 	});
 
-	socket.on(`pong`, () => 
+	socket.on(`pong`, () =>
 	{
 		console.log(`Connection response`);
 	});
 
-	socket.on(`close`, () => 
+	socket.on(`close`, () =>
 	{
 		console.log(`Socket closed`);
 	});
@@ -203,7 +203,7 @@ webSocket.on(`connection`, function connection(socket, request)
 
 
 
-webSocket.on(`error`, (error) => 
+webSocket.on(`error`, (error) =>
 {
 	console.error(error);
 });
@@ -284,7 +284,7 @@ export default class WebPortal
 					response.end(content, `utf-8`);
 				}
 			});
-		}).listen(port, () => 
+		}).listen(port, () =>
 		{
 			console.log(`HTTPS Server listening`);
 		});
@@ -292,7 +292,7 @@ export default class WebPortal
 }
 
 // `Consumes a response event and exposes the data to a web portal`
-api.on(`response`, async (data) => 
+api.on(`response`, async (data) =>
 {
 	console.log(data);
 	console.log(`Web portal generated response ${JSON.stringify(data)}`);

@@ -1,4 +1,4 @@
-import Logger from "./Logger.js";
+import Logger from "./Logger.mjs";
 const log = new Logger(`CLIArguments`);
 
 const targets = new Map();
@@ -17,7 +17,7 @@ export default class CLIArgument
 	{
 		const optionArguments = [];
 
-		this.args.forEach((value, index, array) => 
+		this.args.forEach((value, index, array) =>
 		{
 			const option = this.toOption(value);
 			const flag = this.toFlag(value);

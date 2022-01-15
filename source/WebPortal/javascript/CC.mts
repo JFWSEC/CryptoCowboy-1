@@ -1,8 +1,8 @@
 
 
 import API from "./API.js";
-import Socket from "./Socket.js";
-import UI from "./UI.js";
+import Socket from "./Socket.mjs";
+import UI from "./UI.mjs";
 
 export default class CC
 {

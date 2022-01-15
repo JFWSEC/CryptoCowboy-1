@@ -1,6 +1,6 @@
 
-import Socket from "./Socket.js";
-import UI from "./UI.js";
+import Socket from "./Socket.mjs";
+import UI from "./UI.mjs";
 
 class Request
 {
@@ -30,9 +30,9 @@ class Request
 export default class API
 {
 	/**
-	 * 
-	 * @param {Socket} socket 
-	 * @param {UI} ui 
+	 *
+	 * @param {Socket} socket
+	 * @param {UI} ui
 	 */
 	constructor(socket, ui)
 	{
@@ -92,7 +92,7 @@ export default class API
 	async userInteractionHandler(data)
 	{
 		const parameters = data.parameters;
-		const values = parameters.map((value) => 
+		const values = parameters.map((value) =>
 		{
 			return document.getElementById(value).value;
 		});
