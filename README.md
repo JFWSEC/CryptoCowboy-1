@@ -31,4 +31,4 @@ This remaster is just the appetizer for **AssetStream**.
 Once this restoration project is complete, no new features will be added to CryptoCowboy and the project will be put on ice.
 
 Work on AssetStream is currently on hold until this remaster is completed.
-**AssetStream's** feature set is a superset of CryptoCowboy's and will be the recommended path forward once feature parity is complete.
+**AssetStream's** feature set is a superset of CryptoCowboy's and will be the recommended path forward once feature parity has been met.
