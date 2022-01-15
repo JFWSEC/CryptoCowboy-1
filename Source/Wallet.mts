@@ -1,7 +1,7 @@
-import Logger from "./Utility/Logger.mts/index.js";
+import Logger from "./Utility/Logger.mjs";
 const log = new Logger(`Wallet`);
 
-import API from "./Utility/API.mts/index.js";
+import API from "./Utility/API.mjs";
 const wallet_API = new API(`wallet`);
 export { wallet_API };
 

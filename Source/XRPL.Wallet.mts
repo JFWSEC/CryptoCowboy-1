@@ -1,10 +1,10 @@
-import XRPL from "./XRPL.mts/index.js";
+import XRPL from "./XRPL.mjs";
 const xrpl = new XRPL();
 
-import Logger from "./Utility/Logger.mts/index.js";
+import Logger from "./Utility/Logger.mjs";
 const log = new Logger(`XRPL_Wallet`);
 
-import Wallet, { wallet_API } from "./Wallet.mts/index.js";
+import Wallet, { wallet_API } from "./Wallet.mjs";
 export { wallet_API };
 
 

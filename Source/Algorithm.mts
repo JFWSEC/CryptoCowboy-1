@@ -4,10 +4,10 @@ import crypto from "crypto";
 import XRPL from "./XRPL.mjs";
 import { divide } from "./Utility.mjs";
 
-import Logger from "./Utility/Logger.mts/index.js";
+import Logger from "./Utility/Logger.mjs";
 const log = new Logger(`Algorithm`);
 
-import API from "./Utility/API.mts/index.js";
+import API from "./Utility/API.mjs";
 const algorithm_API = new API(`algorithm`);
 export { algorithm_API };
 

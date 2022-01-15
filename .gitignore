@@ -2,3 +2,6 @@ database
 keys
 logs
 node_modules
+*.map
+*.d.mts
+Release

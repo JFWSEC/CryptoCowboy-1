@@ -1,6 +1,5 @@
 
-//import { RippleAPI } from "../node_modules/ripple-lib/dist/npm/index.js";
-import Logger from "./Utility/Logger.mts/index.js";
+import Logger from "./Utility/Logger.mjs";
 const log = new Logger(`XRPL`);
 
 import RippleAPI_Module from "ripple-lib";

@@ -9,7 +9,7 @@ import fs from "fs";
 import WebSocket from "ws";
 import url from "url";
 
-import API from "./Utility/API.mts/index.js";
+import API from "./Utility/API.mjs";
 
 const api = new API(`WebPortal`);
 export { api };
