@@ -13,7 +13,6 @@ wallet_API.registerConsumer(webPortal_API);
 algorithm_API.registerConsumer(webPortal_API);
 
 import { api } from "./Utility/API.mjs";
-//const api = new API(`API`);
 api.registerConsumer(webPortal_API);
 
 import Database from './Database.mjs';
@@ -21,8 +20,6 @@ const database = new Database();
 
 import CLIArgument from "./Utility/CLIArguments.mjs";
 const cliArgument = new CLIArgument();
-
-//XRPL_Wallet_API.registerConsumer(WebPortal_API);
 
 cliArgument.registerOption(`wallet`, `add`, async (id, address, secret) =>
 {
@@ -65,13 +62,6 @@ var coAsset = ``;
 
 cliArgument.registerOption(`algorithm`, `config`, async (iP, pA, cA) =>
 {
-	/*
-	const tableAlgorithm = await database.readEntireTable(`algorithm`);
-	log.info(`Overwriting old config data`);
-	log.debug(`Table Algorithm: `);
-	log.debug(tableAlgorithm);
-	*/
-
 	database.removeTable(`algorithm`);
 
 	await database.createTable(`algorithm`, [`inflectionPoint`, `primeasset`, `coasset`]);
@@ -184,11 +174,6 @@ async function main()
 		}
 	});
 
-	//log.dev(`Testing API`);
-	//API.request(`wallet`, `assets`, { id: myWallet.id });
-	//setInterval(() => { log.dev(`Sending assets?`); API.request(`wallet`, `assets`, { id: myWallet.id }); }, 10000);
-
-
 	if (clearOrders)
 	{
 		await myWallet.cancelAllOrders();
@@ -233,9 +218,6 @@ async function main()
 		});
 	}
 
-
-
-
 	if (primeAsset == ``)
 	{
 		primeAsset = tableAlgorithm[0].primeasset;
@@ -271,14 +253,8 @@ async function main()
 	if (!primeAssetsSet || !coAssetsSet)
 	{
 		log.error(`Assets not properly set.`);
-		//process.exit();
 		process.exitCode = 1;
 	}
-	//const api = new API();
-	//const webPortal = new WebPortal(api.request);
-
-	//webPortal.createHTTPServer(443);
-	//webPortal.listen();
 
 	if (startAlgo)
 	{
@@ -289,7 +265,7 @@ main().catch((error) =>
 {
 	log.error(`An error has occured in main!`);
 	log.error(error);
-	//process.exit(1);
+
 	process.exitCode = 1;
 });
 
