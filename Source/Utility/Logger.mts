@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+
 import fs from "fs";
 
 var DEV_MODE = false;
@@ -26,46 +26,20 @@ function parseType(data)
 {
 	if (typeof (data) == `string`)
 	{
-		//console.log(`String`);
 		return data + "\n";
 	}
 	else
 	{
-		//	TODO: Object highlighting
-		//log.warning(`Data type not yet supported, attempting to parse`);
 		return (`\n${JSON.stringify(data, null, 2)}\n`);
 	}
 }
-
-/*
-function strings(key, value) 
-{
-	// Filtering out properties
-	if (typeof value === `string`) 
-	{
-		return undefined;
-	}
-	return value;
-}
-
-function keys(...args) 
-{
-	let selectedKeys = [];
-	args.map((key) => 
-	{
-		selectedKeys.push(key);
-	});
-
-	return selectedKeys;
-}
-*/
 
 const logQueue = [];
 var writing = false;
 
 function saveLog(fileName, data)
 {
-	logQueue.push({type: fileName, data: data});
+	logQueue.push({ type: fileName, data: data });
 	handleLogQueue();
 }
 
@@ -124,30 +98,33 @@ function handleLogQueue()
 		});
 	});
 }
-function dateFormat (date, fstr, utc) {
+function dateFormat(date, fstr, utc)
+{
 	utc = utc ? 'getUTC' : 'get';
-	return fstr.replace (/%[YmdHMS]/g, function (m) {
-	  switch (m) {
-	  case '%Y': return date[utc + 'FullYear'] (); // no leading zeros required
-	  case '%m': m = 1 + date[utc + 'Month'] (); break;
-	  case '%d': m = date[utc + 'Date'] (); break;
-	  case '%H': m = date[utc + 'Hours'] (); break;
-	  case '%M': m = date[utc + 'Minutes'] (); break;
-	  case '%S': m = date[utc + 'Seconds'] (); break;
-	  default: return m.slice (1); // unknown code, remove %
-	  }
-	  // add leading zero if required
-	  return ('0' + m).slice (-2);
+	return fstr.replace(/%[YmdHMS]/g, function (m)
+	{
+		switch (m)
+		{
+			case '%Y': return date[utc + 'FullYear'](); // no leading zeros required
+			case '%m': m = 1 + date[utc + 'Month'](); break;
+			case '%d': m = date[utc + 'Date'](); break;
+			case '%H': m = date[utc + 'Hours'](); break;
+			case '%M': m = date[utc + 'Minutes'](); break;
+			case '%S': m = date[utc + 'Seconds'](); break;
+			default: return m.slice(1); // unknown code, remove %
+		}
+		// add leading zero if required
+		return ('0' + m).slice(-2);
 	});
-  }
+}
 
-  /* dateFormat (new Date (), "%Y-%m-%d %H:%M:%S", true) returns 
-   "2012-05-18 05:37:21"  */
+/* dateFormat (new Date (), "%Y-%m-%d %H:%M:%S", true) returns
+ "2012-05-18 05:37:21"  */
 
-   function localTime()
-   {
-	return dateFormat (new Date (), "%Y-%m-%d %H:%M:%S", false);
-   }
+function localTime()
+{
+	return dateFormat(new Date(), "%Y-%m-%d %H:%M:%S", false);
+}
 
 export default class Logger
 {

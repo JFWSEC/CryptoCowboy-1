@@ -5,15 +5,15 @@ const log = new Logger(`CryptoCowboy`);
 import XRPL_Wallet, { wallet_API } from './XRPL.Wallet.mjs';
 import Algorithm, { algorithm_API } from "./Algorithm.mjs";
 
-import WebPortal, { api as webPortal_API } from "./WebPortal.mjs";
-const webPortal = new WebPortal();
-webPortal.createHTTPServer(5443);
+// import WebPortal, { api as webPortal_API } from "./WebPortal.mjs";
+// const webPortal = new WebPortal();
+// webPortal.createHTTPServer(5443);
 
-wallet_API.registerConsumer(webPortal_API);
-algorithm_API.registerConsumer(webPortal_API);
+// wallet_API.registerConsumer(webPortal_API);
+// algorithm_API.registerConsumer(webPortal_API);
 
-import { api } from "./Utility/API.mjs";
-api.registerConsumer(webPortal_API);
+// import { api } from "./Utility/API.mjs";
+// api.registerConsumer(webPortal_API);
 
 import Database from './Database.mjs';
 const database = new Database();
@@ -109,17 +109,9 @@ cliArgument.registerFlag(`S`, () =>
 
 cliArgument.execute();
 
-function sleep(ms)
-{
-	return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 async function main()
 {
 	log.info(`Welcome to CryptoCowboy - REMASTERED`);	//	TODO: Include version number
-
-	await sleep(250);
-	await sleep(2500);	//	For debugging
 
 	const listOfWallets = await database.read(`wallet`, [`id`, `address`, `secret`]);
 	log.dev(`${listOfWallets.length} wallets found`);
@@ -192,17 +184,19 @@ async function main()
 
 	let rp = 0;
 
-	await database.read(`algorithm`, `rangePercentage`).then((data) =>
-	{
-		console.log(`read`);
-		rp = data[0].rangePercentage;
-		console.log(data);
-		return true;
-	}).catch(async (error) =>
-	{
-		console.log(`read fail`);
-		console.log(`Empty row`, error);
-	});
+	await database.read(`algorithm`, `rangePercentage`)
+		.then((data) =>
+		{
+			console.log(`read`);
+			rp = data[0].rangePercentage;
+			console.log(data);
+			return true;
+		})
+		.catch(async (error) =>
+		{
+			console.log(`read fail`);
+			console.log(`Empty row`, error);
+		});
 
 	if (!rp)
 	{
@@ -261,20 +255,11 @@ async function main()
 		await algorithm.start();
 	}
 }
-main().catch((error) =>
-{
-	log.error(`An error has occured in main!`);
-	log.error(error);
+main()
+	.catch((error) =>
+	{
+		log.error(`An error has occured in main!`);
+		log.error(error);
 
-	process.exitCode = 1;
-});
-
-process.on(`beforeExit`, (code) =>
-{
-	log.verbose(`Process beforeExit event with code: ${code}`);
-});
-
-process.on(`exit`, (code) =>
-{
-	log.verbose(`About to exit with code: ${code}`);
-});
+		process.exitCode = 1;
+	});

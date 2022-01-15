@@ -114,7 +114,6 @@ export default class CLIArgument
 
 	registerFlag(flag, callback)
 	{
-
 		if (!flags.has(flag))
 		{
 			log.debug(`Adding flag: ${flag}`);
