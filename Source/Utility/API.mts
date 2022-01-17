@@ -1,5 +1,6 @@
 import Events from "events";
 import { log } from "console";
+
 //	Global API emitter
 const events = new Events();
 
@@ -8,42 +9,37 @@ const assert = Assert.strict;
 
 const registeredModules = new Map();
 
-
 class Command
 {
-	constructor(commandName)
-	{
-		this.command = commandName;
-		this.description = ``;
-		this.parameters = [];
-		this.action = null;
-		this.owner = null;
-	}
+	description = ``;
+	parameters = [];
+	action = () => { };
+	owner = ``;
 
-	describe(description)
+	describe(description: string)
 	{
 		this.description = description;
 	}
 
-	addParameter(parameter, description, type, example)
+	addParameter(parameter, description: string, type, example)
 	{
 		const parameterData =
 		{
-			parameter: parameter,
-			description: description,
-			type: type,
-			example: example
+			parameter,
+			description,
+			type,
+			example
 		};
 
 		this.parameters.push(parameterData);
 	}
 
-	setAction(action)
+	setAction(action: () => void)
 	{
 		this.action = action;
 	}
 
-	attach(owner)
+	attach(owner: string)
 	{
 		this.owner = owner;
 	}
@@ -54,13 +50,15 @@ class Command
 	}
 }
 
+
+
+
 export default class API extends Events
 {
-	constructor(id)
+	constructor(public id: string)
 	{
 		super();
 
-		this.id = id;
 		registeredModules.set(id, this);
 
 		this.commands = new Map();
@@ -119,7 +117,6 @@ export default class API extends Events
 	}
 
 	/**
-	 *
 	 * @param {Command} commandData
 	 */
 	registerCommand(commandData)
@@ -161,11 +158,11 @@ export default class API extends Events
 		}
 		else
 		{
-			log.warn(`Invalid Request received: ${data}`);
+			log(`Invalid Request received: ${data}`);
 			return false;
 		}
 
-		log.dev(`We received a request for '${destination}' from '${source}' to '${command}'`);
+		log(`We received a request for '${destination}' from '${source}' to '${command}'`);
 		delete data.destination;
 
 		events.emit(destination, data);
@@ -173,11 +170,11 @@ export default class API extends Events
 
 	response(data)
 	{
-		log.dev(`id ${this.id}, API Response ${data}, consumers: ${this.consumers}`);
+		log(`id ${this.id}, API Response ${data}, consumers: ${this.consumers}`);
 		this.consumers.forEach((consumer) =>
 		{
 			log(`Sending ${data} to consumer ${consumer}`);
-			if (this.id == `API`)
+			if (this.id === `API`)
 			{
 				return;
 			}
