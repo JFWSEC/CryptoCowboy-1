@@ -41,11 +41,6 @@ function csvString(columns)
 
 export default class Database
 {
-	constructor()
-	{
-		//this.renameColumn(`wallet`, `name`, `id`);
-	}
-
 	async execute(...args)
 	{
 		return new Promise((resolve, reject) =>
@@ -121,17 +116,17 @@ export default class Database
 						rows.push(row);
 					}
 				},
-				(error, n) =>
-				{
-					if (error)
+					(error, n) =>
 					{
-						reject(error);
-					}
-					else
-					{
-						resolve(rows);
-					}
-				});
+						if (error)
+						{
+							reject(error);
+						}
+						else
+						{
+							resolve(rows);
+						}
+					});
 			});
 		});
 	}
@@ -139,7 +134,7 @@ export default class Database
 	async columnExists(table, column)
 	{
 		const tableData = await this.readEntireTable(table);
-		if(tableData[column])
+		if (tableData[column])
 		{
 			return true;
 		}
@@ -257,12 +252,6 @@ export default class Database
 		}
 		await this.execute(query);
 	}
-
-
-
-	//	*********************************************************
-	//	Load All Wallets from Database
-	//	*********************************************************
 
 	loadWallets()
 	{
