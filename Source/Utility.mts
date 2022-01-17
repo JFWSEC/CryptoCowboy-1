@@ -1,23 +1,33 @@
-
-
-
-
-function exists(data)
+export function append(text: string)
 {
-	if (data == null)
+	return function (data: string)
 	{
-		return false;
-	}
-	else if (data == undefined)
-	{
-		return false;
-	}
-	else
-	{
-		return true;
-	}
+		return `${data}${text}`;
+	};
 }
 
+export const Property =
+	<P extends string>
+		(property: P) =>
+		<O extends Record<P, V>, V>
+			(data: O) =>
+			data[property];
+
+
+function pipe<A, B, C>(f: λ<A, B>, g: λ<B, C>): (x: A) => C
+{
+	return (x) => g(f(x));
+}
+
+export function Pipe
+	<A extends λ, B extends λ, F extends λ[]>
+	(...fs: [A, B, ...F]):
+	(pipedInput: Parameters<A>[0]) => ReturnType<F extends [...any[], infer G] ? G : B>
+{
+	const [head, hydra, next, ...rest] = fs;
+	const piped = pipe(head, hydra);
+	return next ? Pipe(piped, next, ...rest) : piped;
+};
 
 function divide(a, b)
 {
@@ -50,25 +60,6 @@ function binary(data)
 	}
 	return rawBinary;
 }
-/*
-function bits(byte, start, stop)
-{
-	console.log(binary(byte));
 
-	let clearLeft = byte << 7 - stop;
-	clearLeft = clearLeft & 255;
-	clearLeft = clearLeft >> 7 - stop;
 
-	console.log(binary(clearLeft));
-
-	let clearRight = clearLeft >> start;
-	clearRight = clearRight & 255;
-	const result = clearRight << start;
-
-	console.log(binary(clearRight));
-
-	return result;
-}
-*/
-
-export { binary, hex, exists, divide };
+export { binary, hex, divide };

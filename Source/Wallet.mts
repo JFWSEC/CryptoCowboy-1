@@ -3,17 +3,15 @@ const log = new Logger(`Wallet`);
 
 import API from "./Utility/API.mjs";
 
+
+
 export const wallet_API = new API(`wallet`);
-
-
-const _wallets = new Map();
 
 const assetsCommand = wallet_API.createCommand(`wallets`);
 assetsCommand.describe(`Returns a list of all wallets`);
 assetsCommand.setAction(async (data) =>
 {
 	const response = await Wallet.getWallets();
-	console.log(response);
 
 	const result = {};
 	result.wallet = response;
@@ -24,16 +22,17 @@ assetsCommand.setAction(async (data) =>
 });
 assetsCommand.register();
 
+
+
+
 export default class Wallet
 {
-	constructor(id)
+	constructor()
 	{
 		if (this.constructor === Wallet)
 		{
 			throw new TypeError(`Abstract class "${Wallet.name}" cannot be instantiated directly.`);
 		}
-		this.id = id;
-		_wallets.set(id, this);
 	}
 
 	static async getWallets(method)
@@ -99,9 +98,7 @@ export default class Wallet
 		throw new TypeError(`Method, 'buy()' for abstract class '${Wallet.name}' has not been overloaded.`);
 	}
 
-
 	/**
-	 *
 	 * @param {import("ripple-lib/dist/npm/common/types/objects").Amount} sellAsset
 	 * @param {import("ripple-lib/dist/npm/common/types/objects").Amount} costAsset
 	 * @param {import("ripple-lib/dist/npm/common/types/objects").Memo} [memos]
@@ -114,11 +111,9 @@ export default class Wallet
 		throw new TypeError(`Method, 'sell()' for abstract class '${Wallet.name}' has not been overloaded.`);
 	}
 
-
 	async isOrderOpen(orderID)
 	{
 		orderID;
 		throw new TypeError(`Method, 'isOrderOpen(orderID)' for abstract class '${Wallet.name}' has not been overloaded.`);
 	}
-
 }
