@@ -10,11 +10,6 @@ export { algorithm_API };
 
 const _orders = new Map();
 
-/**
- * @type {Map<Algorithm, import('./Wallet.js') | import('./XRPL.Wallet.js')>}
- */
-const _wallet = new Map();
-
 const _buyOrder = new Map();
 const _sellOrder = new Map();
 
@@ -24,23 +19,33 @@ const _rangePercentage = new Map();
 const softSaturatedPercent = 0.35;
 const saturatedPercent = 0.50;
 
-const everyDay = (24 * 60 * 60 * 1000);
+import Time from "./Utility/Time.mjs";
+const { day, minutes } = Time;
 
-let timeout = setTimeout(cancelOrders, everyDay);
+
+let timeout = setTimeout(cancelOrders, day);
 
 
 function Timeout()
 {
 	clearTimeout(timeout);
-	timeout = setTimeout(cancelOrders, everyDay);
+	timeout = setTimeout(cancelOrders, day);
+}
+
+import W from './Wallet.mjs';
+import WX from './XRPL.Wallet.mjs';
+
+
+function algorithm(wallet: W | WX)
+{
+
 }
 
 
 export default class Algorithm
 {
-	constructor(wallet)
+	constructor()
 	{
-		_wallet.set(this, wallet);
 		_orders.set(this, []);
 
 		_inflectionPoint.set(this, null);
@@ -68,19 +73,13 @@ export default class Algorithm
 
 	rangeCooldown()
 	{
-		const everyDay = (24 * 60 * 60 * 1000);
-		const everyHour = (60 * 60 * 1000);
-		const everyFourtyFive = (60 * 45 * 1000);
-		const everyHalfHour = (30 * 60 * 1000);
-
-		//86400 seconds in a day
 		setInterval(() =>
 		{
 			if (parseFloat(this.rangePercentage) > parseFloat(this.rangePercentageLow))
 			{
 				this.rangePercentage = parseFloat(this.rangePercentage) - parseFloat(((parseFloat(this.rangePercentage) - parseFloat(this.rangePercentageLow)) / 10.00));
 			}
-		}, everyFourtyFive);
+		}, minutes(40));
 	}
 
 	get rangePercentage()
@@ -226,20 +225,12 @@ export default class Algorithm
 	{
 		log(`Getting open order count`);
 
-		const wallet = _wallet.get(this);
-
-		const openOrders = await wallet.getOpenOrders();
-		return openOrders.length;
+		return wallet.getOpenOrders().then((openOrders) => openOrders.length);
 	}
 
 	get orders()
 	{
 		return _orders.get(this);
-	}
-
-	get wallet()
-	{
-		return _wallet.get(this);
 	}
 
 	set order(order)
@@ -285,9 +276,7 @@ export default class Algorithm
 		log(`Buy() => this.coAsset: ${this.coAsset}`);
 		log(`Buying ${JSON.stringify(buy)} for ${JSON.stringify(cost)}`);
 
-		const wallet = _wallet.get(this);
-
-		return await wallet.buy(buy, cost);
+		return wallet.buy(buy, cost);
 	}
 
 	async sell()
@@ -301,24 +290,13 @@ export default class Algorithm
 		cost.value = XRPL.trim(this.range.number.toFixed(6));
 
 		log(`selling ${JSON.stringify(sell)} for ${JSON.stringify(cost)}`);
-		const wallet = _wallet.get(this);
-		return await wallet.sell(sell, cost);
+
+		return wallet.sell(sell, cost);
 	}
 
 	async cancelOrders()
 	{
 		await this.wallet.cancelAllOrders();
-
-		/*
-				if (this.buyOrder)
-				{
-					this.wallet.cancel(this.buyOrder);
-				}
-				if (this.sellOrder)
-				{
-					this.wallet.cancel(this.sellOrder);
-				}
-				*/
 	}
 
 
