@@ -7,12 +7,15 @@ const log = new Logger(`XRPL_Wallet`);
 import Wallet, { wallet_API } from "./Wallet.mjs";
 export { wallet_API };
 
+function XRPL_Account()
+{
 
+}
 export default class XRPL_Wallet extends Wallet
 {
 	constructor(wallet)
 	{
-		super(wallet.id);
+		super();
 
 		this.address = wallet.address;
 		this.secret = wallet.secret;
@@ -52,7 +55,7 @@ export default class XRPL_Wallet extends Wallet
 
 	async isOrderOpen(hash)
 	{
-		log.dev(`hash: ${hash}`);
+		log(`hash: ${hash}`);
 
 		const transaction = await xrpl.getTransaction(hash).catch((error) =>
 		{
@@ -60,13 +63,13 @@ export default class XRPL_Wallet extends Wallet
 		});
 
 		const transactionType = transaction.type;
-		log.dev(transactionType);
+		log(transactionType);
 
 		const balanceChange = transaction.outcome.balanceChanges[transaction.address];
-		log.dev(balanceChange);
+		log(balanceChange);
 
 		const transactionResult = transaction.outcome.result;
-		log.dev(transactionResult);
+		log(transactionResult);
 		if (transactionResult == `tesSUCCESS`)
 		{
 			return true;
@@ -79,9 +82,9 @@ export default class XRPL_Wallet extends Wallet
 
 	async assetBalance(asset)
 	{
-		log.dev(`assetBalance(asset): ${JSON.stringify(asset)}`);
+		log(`assetBalance(asset): ${JSON.stringify(asset)}`);
 		const assets = await this.getAssets();
-		log.dev(`assets: ${JSON.stringify(assets)}`);
+		log(`assets: ${JSON.stringify(assets)}`);
 
 		let result = asset;
 
@@ -116,7 +119,7 @@ export default class XRPL_Wallet extends Wallet
 	async getOpenOrders()
 	{
 		const orders = await xrpl.getOrders(this.address);
-		log.dev(`Orders:`);
+		log(`Orders:`);
 		orders.forEach((orders, index) =>
 		{
 			const specification = orders.specification;
@@ -128,7 +131,7 @@ export default class XRPL_Wallet extends Wallet
 			const coCurrency = totalPrice.currency;
 			const coValue = totalPrice.value;
 
-			log.dev(`${index + 1}: ${direction} ${value} ${primaryCurrency} for ${coValue} ${coCurrency}`);
+			log(`${index + 1}: ${direction} ${value} ${primaryCurrency} for ${coValue} ${coCurrency}`);
 		});
 		return orders;
 	}
@@ -155,7 +158,7 @@ export default class XRPL_Wallet extends Wallet
 
 	async cancelOrder(orderSequence)
 	{
-		log.verbose(`Canceling order number ${orderSequence}`);
+		log(`Canceling order number ${orderSequence}`);
 		return await xrpl.cancelOrder(this.address, this.secret, orderSequence);
 	}
 
@@ -168,7 +171,7 @@ export default class XRPL_Wallet extends Wallet
 		//	buyAssetRippleFormat.memos = memos;
 		//}
 
-		log.dev(`Placing buy order`);
+		log(`Placing buy order`);
 		return await xrpl.buy(this.address, this.secret, buyAsset, costAsset, memos);
 	}
 
@@ -209,7 +212,7 @@ export default class XRPL_Wallet extends Wallet
 			costAssetRippleFormat.counterparty = costAsset.counterparty;
 		}
 */
-		log.dev(`Placing sell order`);
+		log(`Placing sell order`);
 		return await xrpl.sell(this.address, this.secret, sellAsset, costAsset, memos);
 	}
 }
