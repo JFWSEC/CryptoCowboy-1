@@ -1,6 +1,5 @@
 import { log } from "console";
 
-
 import XRPL from "./XRPL.mjs";
 import { divide } from "./Utility.mjs";
 
@@ -20,158 +19,60 @@ const softSaturatedPercent = 0.35;
 const saturatedPercent = 0.50;
 
 import Time from "./Utility/Time.mjs";
-const { day, minutes } = Time;
+const { minutes } = Time;
 
 
-let timeout = setTimeout(cancelOrders, day);
+// let timeout = setTimeout(cancelOrders, day);
+
+// function Timeout()
+// {
+// 	clearTimeout(timeout);
+// 	timeout = setTimeout(cancelOrders, day);
+// }
+
+import Wallet from './Wallet.mjs';
+import XRPL_Wallet from './XRPL.Wallet.mjs';
 
 
-function Timeout()
+function algorithm(wallet: Wallet | XRPL_Wallet)
 {
-	clearTimeout(timeout);
-	timeout = setTimeout(cancelOrders, day);
-}
+	// const orders = []
+	//	asymmetricOrderPlaced = false;
 
-import W from './Wallet.mjs';
-import WX from './XRPL.Wallet.mjs';
+	// {import("ripple-lib/dist/npm/ledger/balances").Balance}
+	// this.primeAsset = null;
+	// this.coAsset = null;
 
+	const inflectionPoint = 0;
+	const rangePercentage = 0.0225;
+	const rangePercentageMinimum = 0.02;
+	const rangePercentageMaximum = 0.25;
 
-function algorithm(wallet: W | WX)
-{
+	function rangeDecay()	//	We can do better than this
+	{
+		const difference = rangePercentage - rangePercentageMinimum;
+
+		const tenPercentOfDifferernce = difference / 10.00;
+
+		return Math.min(rangePercentage - tenPercentOfDifferernce, rangePercentageMinimum);
+	}
+
+	function range()
+	{
+		return {
+			number: (parseFloat(inflectionPoint) * parseFloat(rangePercentage / 100.00)),
+			string: XRPL.trim(parseFloat(this.inflectionPoint * parseFloat(this.rangePercentage / 100.00)).toFixed(6))
+		};
+	}
+
 
 }
 
 
 export default class Algorithm
 {
-	constructor()
-	{
-		_orders.set(this, []);
-
-		_inflectionPoint.set(this, null);
-
-		_rangePercentage.set(this, 2.25);
-
-		this.rangePercentageLow = 2.00;
-		this.rangePercentageHigh = 12.25;
-
-		this.asymmetricOrderPlaced = false;
-
-		/**
-		 *
-		 * @type {import("ripple-lib/dist/npm/ledger/balances").Balance}
-		 */
-		this.primeAsset = null;
-
-		/**
-		 *
-		 * @type {import("ripple-lib/dist/npm/ledger/balances").Balance}
-		 */
-		this.coAsset = null;
-	}
 
 
-	rangeCooldown()
-	{
-		setInterval(() =>
-		{
-			if (parseFloat(this.rangePercentage) > parseFloat(this.rangePercentageLow))
-			{
-				this.rangePercentage = parseFloat(this.rangePercentage) - parseFloat(((parseFloat(this.rangePercentage) - parseFloat(this.rangePercentageLow)) / 10.00));
-			}
-		}, minutes(40));
-	}
-
-	get rangePercentage()
-	{
-		return _rangePercentage.get(this);
-	}
-
-	//	TODO: Error checking
-	set rangePercentage(value)
-	{
-		if (isNaN(value))
-		{
-			log(this.rangePercentage);
-			throw new Error(`Invalid Range percentage`);
-		}
-		else
-		{
-			if (value < 0)
-			{
-				log(this.rangePercentage);
-				throw new Error(`Invalid Range percentage`);
-			}
-			else
-			{
-				_rangePercentage.set(this, value);
-				database.updateData(`algorithm`, `rangePercentage`, value);
-			}
-		}
-	}
-
-
-	get inflectionPoint()
-	{
-		const ip = _inflectionPoint.get(this);
-		if (isNaN(ip))
-		{
-			log(ip);
-			throw new Error(`Invalid IP`);
-		}
-		else
-		{
-			if (ip < 0)
-			{
-				log(ip);
-				throw new Error(`Invalid IP`);
-			}
-			else
-			{
-				return ip;
-			}
-		}
-	}
-
-	set inflectionPoint(value)
-	{
-		console.log(value);
-		console.log(typeof (value));
-
-		if (isNaN(value))
-		{
-			log(this.inflectionPoint);
-			throw new Error(`Invalid New IP`);
-		}
-		else
-		{
-			if (value < 0)
-			{
-				log(this.inflectionPoint);
-				throw new Error(`Invalid New IP`);
-			}
-			else
-			{
-				_inflectionPoint.set(this, value);
-				database.updateData(`algorithm`, `inflectionPoint`, value);
-			}
-		}
-	}
-
-	get lowLiquidity()
-	{
-		const bufferedRange = this.range.number * 1.05;
-		const result = (bufferedRange > this.primeAsset.value);
-		return result;
-	}
-
-	get range()
-	{
-		return {
-			number: (parseFloat(this.inflectionPoint) * parseFloat(this.rangePercentage / 100.00)),
-			string: XRPL.trim(parseFloat(this.inflectionPoint * parseFloat(this.rangePercentage / 100.00)).toFixed(6))
-		};
-	}
 
 	get rangeLow()
 	{
